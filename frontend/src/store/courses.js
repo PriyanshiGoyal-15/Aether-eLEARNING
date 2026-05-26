@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from './auth';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aether-elearning.onrender.com/api';
 
 export const useCoursesStore = defineStore('courses', {
   state: () => {
@@ -146,13 +146,13 @@ export const useCoursesStore = defineStore('courses', {
         const response = await fetch(`${API_BASE}/db`);
         if (!response.ok) throw new Error('Failed to load database');
         const db = await response.json();
-        
+
         this.courses = db.courses;
         this.enrollments = db.enrollments;
         this.bookmarks = db.bookmarks || [];
         this.reviews = db.reviews;
         this.notifications = db.notifications;
-        
+
         // Also hydrate authStore users
         authStore.users = db.users;
       } catch (err) {
