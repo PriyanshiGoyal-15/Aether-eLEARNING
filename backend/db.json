@@ -1,0 +1,461 @@
+{
+  "users": [
+    {
+      "id": "user-student",
+      "email": "student@aether.edu",
+      "password": "student123",
+      "name": "Priyanshi Sharma",
+      "role": "student",
+      "suspended": false,
+      "streakCount": 5,
+      "joinedDate": "2026-01-15"
+    },
+    {
+      "id": "user-teacher",
+      "email": "teacher@aether.edu",
+      "password": "teacher123",
+      "name": "Dr. Sarah Jenkins",
+      "role": "teacher",
+      "suspended": false,
+      "joinedDate": "2025-11-10"
+    },
+    {
+      "id": "user-admin",
+      "email": "admin@aether.edu",
+      "password": "admin123",
+      "name": "Chief Administrator",
+      "role": "admin",
+      "suspended": false,
+      "joinedDate": "2025-09-01"
+    }
+  ],
+  "courses": [
+    {
+      "id": "course-vue",
+      "title": "Mastering Vue 3: From Zero to Hero",
+      "description": "Learn Vue 3, Vue Router, Pinia, Composition API, and modern SPA design using Tailwind CSS. Create beautiful dynamic user interfaces and scale them efficiently.",
+      "shortDescription": "Master reactive SPA development with Vue 3 and modern design systems.",
+      "category": "Development",
+      "difficulty": "Intermediate",
+      "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80",
+      "teacherId": "user-teacher",
+      "teacherName": "Dr. Sarah Jenkins",
+      "status": "approved",
+      "rating": 4.8,
+      "reviewsCount": 124,
+      "studentsCount": 1250,
+      "duration": "4.5 Hours",
+      "rejectionReason": "",
+      "modules": [
+        {
+          "id": "mod-vue-1",
+          "title": "Module 1: Introduction & App Setup",
+          "lessons": [
+            {
+              "id": "vue-1-1",
+              "title": "1. Welcome & Scaffold Vite Project",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "10:15",
+              "completed": false
+            },
+            {
+              "id": "vue-1-2",
+              "title": "2. Setting up Tailwind CSS & Google Fonts",
+              "type": "pdf",
+              "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+              "duration": "Reading Guide (5 mins)",
+              "completed": false
+            }
+          ]
+        },
+        {
+          "id": "mod-vue-2",
+          "title": "Module 2: Reactivity & Composition API",
+          "lessons": [
+            {
+              "id": "vue-2-1",
+              "title": "3. Understanding ref(), reactive(), and computed()",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "18:42",
+              "completed": false
+            },
+            {
+              "id": "vue-2-2",
+              "title": "4. Component Props, Emits & Custom Events",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "15:20",
+              "completed": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "course-fastapi",
+      "title": "Full-Stack Backend Development with FastAPI",
+      "description": "Deep dive into synchronous and asynchronous web services using Python, FastAPI, and MongoDB Atlas. Learn modern RESTful designs, token auth, and route protections.",
+      "shortDescription": "Build ultra-fast, production-ready Python backend APIs.",
+      "category": "Backend",
+      "difficulty": "Advanced",
+      "thumbnail": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80",
+      "teacherId": "user-teacher",
+      "teacherName": "Dr. Sarah Jenkins",
+      "status": "approved",
+      "rating": 4.7,
+      "reviewsCount": 42,
+      "studentsCount": 380,
+      "duration": "6 Hours",
+      "rejectionReason": "",
+      "modules": [
+        {
+          "id": "mod-api-1",
+          "title": "Module 1: Scaffolding FastAPI & Async Core",
+          "lessons": [
+            {
+              "id": "api-1-1",
+              "title": "1. Python Async/Await Foundations",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "12:05",
+              "completed": false
+            },
+            {
+              "id": "api-1-2",
+              "title": "2. Setting up Uvicorn & MongoDB Atlas Cloud",
+              "type": "pdf",
+              "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+              "duration": "Atlas Setup PDF",
+              "completed": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "course-design",
+      "title": "UI/UX Foundations: Designing High-End Dashboards",
+      "description": "Create breathtaking digital products. Learn how to master glassmorphism, tailwind variables, micro-animations, typography layouts, and HSL custom colors.",
+      "shortDescription": "Design high-fidelity user experiences that wow clients.",
+      "category": "Design",
+      "difficulty": "Beginner",
+      "thumbnail": "https://images.unsplash.com/photo-1541462608143-67571c6738dd?auto=format&fit=crop&w=600&q=80",
+      "teacherId": "user-other-teacher",
+      "teacherName": "Alex Mercer",
+      "status": "approved",
+      "rating": 4.9,
+      "reviewsCount": 88,
+      "studentsCount": 921,
+      "duration": "3.5 Hours",
+      "rejectionReason": "",
+      "modules": [
+        {
+          "id": "mod-design-1",
+          "title": "Module 1: Layout, Contrast & Colors",
+          "lessons": [
+            {
+              "id": "design-1-1",
+              "title": "1. Selecting Dark Mode Palettes",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "15:40",
+              "completed": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "course-1779795335289",
+      "title": "react",
+      "description": "react",
+      "shortDescription": "react",
+      "category": "Development",
+      "difficulty": "Intermediate",
+      "thumbnail": "https://legacy.reactjs.org/logo-og.png",
+      "teacherId": "user-1779795203001",
+      "teacherName": "Priyanshi Goyal",
+      "status": "approved",
+      "rating": 5.0,
+      "reviewsCount": 0,
+      "studentsCount": 1,
+      "duration": "Flexible",
+      "rejectionReason": "",
+      "modules": [
+        {
+          "id": "mod-1779795335289-0",
+          "title": "Module 1: Getting Started",
+          "lessons": [
+            {
+              "id": "les-1779795335289-0-0",
+              "title": "1. Introduction to the Program",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "12:30",
+              "completed": false
+            }
+          ]
+        },
+        {
+          "id": "mod-1779795335289-1",
+          "title": "Module 2: Title here",
+          "lessons": [
+            {
+              "id": "les-1779795335289-1-0",
+              "title": "1. First Lecture",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "10:00",
+              "completed": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "course-1779795350403",
+      "title": "string",
+      "description": "string",
+      "shortDescription": "string",
+      "category": "string",
+      "difficulty": "string",
+      "thumbnail": "string",
+      "teacherId": "string",
+      "teacherName": "string",
+      "status": "rejected",
+      "rating": 5.0,
+      "reviewsCount": 0,
+      "studentsCount": 0,
+      "duration": "Flexible",
+      "rejectionReason": "broken details",
+      "modules": [
+        {
+          "id": "mod-1779795350403-0",
+          "title": "string",
+          "lessons": [
+            {
+              "id": "les-1779795350403-0-0",
+              "title": "string",
+              "type": "string",
+              "url": "string",
+              "duration": "string",
+              "completed": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "course-1779795617162",
+      "title": "Test Course",
+      "description": "Test description",
+      "shortDescription": "Test description",
+      "category": "Development",
+      "difficulty": "Intermediate",
+      "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
+      "teacherId": "user-teacher",
+      "teacherName": "Dr. Sarah Jenkins",
+      "status": "pending",
+      "rating": 5.0,
+      "reviewsCount": 0,
+      "studentsCount": 0,
+      "duration": "Flexible",
+      "rejectionReason": "",
+      "modules": [
+        {
+          "id": "mod-1779795617162-0",
+          "title": "Module 1",
+          "lessons": [
+            {
+              "id": "les-1779795617162-0-0",
+              "title": "Lesson 1",
+              "type": "video",
+              "url": "https://res.cloudinary.com/demo/video/upload/elephants.mp4",
+              "duration": "10:00",
+              "completed": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "enroll-1",
+      "studentId": "user-student",
+      "courseId": "course-vue",
+      "completedLessons": [
+        "vue-1-1",
+        "vue-1-2",
+        "vue-2-1",
+        "vue-2-2"
+      ],
+      "progressPercent": 100,
+      "enrolledDate": "2026-05-10",
+      "completedDate": "2026-05-26"
+    },
+    {
+      "id": "enroll-1779795655758",
+      "studentId": "user-student",
+      "courseId": "course-design",
+      "completedLessons": [
+        "design-1-1"
+      ],
+      "progressPercent": 100,
+      "enrolledDate": "2026-05-26",
+      "completedDate": "2026-05-26"
+    },
+    {
+      "id": "enroll-1779795675720",
+      "studentId": "user-student",
+      "courseId": "course-1779795335289",
+      "completedLessons": [
+        "les-1779795335289-0-0",
+        "les-1779795335289-1-0"
+      ],
+      "progressPercent": 100,
+      "enrolledDate": "2026-05-26",
+      "completedDate": "2026-05-26"
+    }
+  ],
+  "bookmarks": [],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "courseId": "course-vue",
+      "studentName": "Alex Mercer",
+      "rating": 5,
+      "comment": "Excellent structured explanation of refs and computed properties. Extremely easy to digest!",
+      "date": "2026-05-15"
+    },
+    {
+      "id": "rev-2",
+      "courseId": "course-vue",
+      "studentName": "Emma Watson",
+      "rating": 4.5,
+      "comment": "Very clean custom CSS layouts, highly legible.",
+      "date": "2026-05-18"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "not-1779795681170",
+      "userId": "user-student",
+      "title": "Course Completed! \ud83c\udf93",
+      "message": "Congratulations! You have completed 100% of \"react\". Claim your verified certificate now!",
+      "type": "success",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795675720",
+      "userId": "user-student",
+      "title": "Enrolled Successfully!",
+      "message": "You have enrolled in \"react\". Start learning today!",
+      "type": "success",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795659136",
+      "userId": "user-student",
+      "title": "Course Completed! \ud83c\udf93",
+      "message": "Congratulations! You have completed 100% of \"UI/UX Foundations: Designing High-End Dashboards\". Claim your verified certificate now!",
+      "type": "success",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795655758",
+      "userId": "user-student",
+      "title": "Enrolled Successfully!",
+      "message": "You have enrolled in \"UI/UX Foundations: Designing High-End Dashboards\". Start learning today!",
+      "type": "success",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795641087",
+      "userId": "user-student",
+      "title": "Course Completed! \ud83c\udf93",
+      "message": "Congratulations! You have completed 100% of \"Mastering Vue 3: From Zero to Hero\". Claim your verified certificate now!",
+      "type": "success",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795617162",
+      "userId": "user-admin",
+      "title": "Moderate New Course Proposal",
+      "message": "\"Test Course\" has been submitted by Dr. Sarah Jenkins and is awaiting review.",
+      "type": "warning",
+      "read": false,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795574365",
+      "userId": "user-1779795203001",
+      "title": "Course Proposal Approved! \ud83c\udf89",
+      "message": "Your program \"react\" has been approved by the Admin and is now live!",
+      "type": "success",
+      "read": false,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795572650",
+      "userId": "user-teacher",
+      "title": "Course Proposal Approved! \ud83c\udf89",
+      "message": "Your program \"Full-Stack Backend Development with FastAPI\" has been approved by the Admin and is now live!",
+      "type": "success",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795557973",
+      "userId": "string",
+      "title": "Course Proposal Returned",
+      "message": "Your program \"string\" requires revisions: \"broken details\"",
+      "type": "danger",
+      "read": false,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795350403",
+      "userId": "user-admin",
+      "title": "Moderate New Course Proposal",
+      "message": "\"string\" has been submitted by string and is awaiting review.",
+      "type": "warning",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1779795335289",
+      "userId": "user-admin",
+      "title": "Moderate New Course Proposal",
+      "message": "\"react\" has been submitted by Priyanshi Goyal and is awaiting review.",
+      "type": "warning",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-1",
+      "userId": "user-student",
+      "title": "Welcome to Aether!",
+      "message": "Explore dynamic programs in your Home catalog and start learning today.",
+      "type": "info",
+      "read": true,
+      "date": "2026-05-26"
+    },
+    {
+      "id": "not-2",
+      "userId": "user-student",
+      "title": "Resume Your Vue 3 Training",
+      "message": "You have completed 25% of Mastering Vue 3! Continue modules.",
+      "type": "success",
+      "read": true,
+      "date": "2026-05-26"
+    }
+  ]
+}
