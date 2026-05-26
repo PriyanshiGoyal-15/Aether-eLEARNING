@@ -20,11 +20,14 @@ origins = [
     "http://127.0.0.1:3000",
     "http://localhost:5175",
     "http://127.0.0.1:5175",
+    "https://aether-elearning-1.onrender.com",
+    "https://aether-elearning.onrender.com",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex="https://.*\\.onrender\\.com",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
