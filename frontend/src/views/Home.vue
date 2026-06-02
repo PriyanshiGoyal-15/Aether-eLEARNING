@@ -232,7 +232,7 @@ const jumpToTourStep = (step) => {
       <div class="max-w-7xl mx-auto px-6">
         
         <!-- Hero Section: Obsidian Headline & Pulsing Blueprint Interconnect Map -->
-        <section class="grid lg:grid-cols-12 gap-12 items-center py-6 md:py-16">
+        <section class="grid lg:grid-cols-12 gap-12 items-center py-6 md:py-8">
           
           <!-- Headline Panel -->
           <div class="lg:col-span-5 text-left space-y-6">
@@ -289,10 +289,10 @@ const jumpToTourStep = (step) => {
           <!-- Pulsing System Blueprint map -->
           <div class="lg:col-span-7 relative">
             <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 via-purple-500/10 to-emerald-500/20 rounded-2xl blur-xl opacity-20"></div>
-            <div class="relative bg-brand-card border border-brand-border rounded-2xl p-6 md:p-8 flex flex-col justify-between min-h-[500px]">
+            <div class="relative bg-brand-card border border-white/25 rounded-2xl p-6 md:p-8 flex flex-col justify-between min-h-[500px]">
               
               <!-- Blueprint Title -->
-              <div class="flex items-center justify-between pb-4 border-b border-brand-border">
+              <div class="flex items-center justify-between pb-4 border-b border-white/5">
                 <div class="flex items-center gap-2">
                   <div class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></div>
                   <span class="text-[10px] font-mono font-bold text-brand-sub">AETHER SYSTEM BLUEPRINT OVERLAY</span>
@@ -1219,34 +1219,34 @@ app = FastAPI(title=<span class="text-emerald-400">"Aether Core"</span>)
               </div>
               <span class="font-bold text-sm text-white">Aether Academy</span>
             </div>
-            <p class="text-[10px] text-gray-500 leading-relaxed font-mono">
+            <p class="text-[11px] text-gray-500 leading-relaxed font-mono">
               Next-generation operational e-learning rig connecting mentors, students, and verifiable hashes.
             </p>
           </div>
 
           <div class="space-y-2">
             <h4 class="text-[10px] font-bold text-white uppercase tracking-wider font-mono">Operational</h4>
-            <div class="flex flex-col gap-1.5 text-[10px] text-gray-500 font-mono">
-              <a href="#platform-tour" class="hover:text-white transition-colors">Tour Stepper</a>
-              <a href="#sandbox" class="hover:text-white transition-colors">Compiler Rig</a>
-              <a href="#catalog-view" class="hover:text-white transition-colors">Syllabi Deck</a>
+            <div class="flex flex-col gap-1.5 text-[12px] text-gray-500 font-mono">
+              <a href="#platform-tour" class="hover:text-brand-primary hover:font-bold transition-colors">Tour Stepper</a>
+              <a href="#sandbox" class="hover:text-brand-primary hover:font-bold transition-colors">Compiler Rig</a>
+              <a href="#catalog-view" class="hover:text-brand-primary hover:font-bold transition-colors">Syllabi Deck</a>
             </div>
           </div>
 
           <div class="space-y-2">
             <h4 class="text-[10px] font-bold text-white uppercase tracking-wider font-mono">Registry</h4>
-            <div class="flex flex-col gap-1.5 text-[10px] text-gray-500 font-mono">
-              <router-link to="/login" class="hover:text-white transition-colors">Course Guard</router-link>
-              <a href="#catalog-view" class="hover:text-white transition-colors">Course Showroom</a>
+            <div class="flex flex-col gap-1.5 text-[12px] text-gray-500 font-mono">
+              <router-link to="/login" class="hover:text-brand-primary hover:font-bold transition-colors">Course Guard</router-link>
+              <a href="#catalog-view" class="hover:text-brand-primary hover:font-bold transition-colors">Course Showroom</a>
               <span class="text-emerald-400 font-bold uppercase tracking-wider">Ledger Active</span>
             </div>
           </div>
 
           <div class="space-y-2">
             <h4 class="text-[10px] font-bold text-white uppercase tracking-wider font-mono">Academy</h4>
-            <div class="flex flex-col gap-1.5 text-[10px] text-gray-500 font-mono">
-              <a href="#faq" class="hover:text-white transition-colors">Curriculum FAQs</a>
-              <a href="#" class="hover:text-white transition-colors">Developer SLA</a>
+            <div class="flex flex-col gap-1.5 text-[12px] text-gray-500 font-mono">
+              <a href="#faq" class="hover:text-brand-primary hover:font-bold transition-colors">Curriculum FAQs</a>
+              <a href="#" class="hover:text-brand-primary hover:font-bold transition-colors">Developer SLA</a>
               <span class="text-gray-600">v1.2.0 Seeding</span>
             </div>
           </div>
@@ -1254,10 +1254,10 @@ app = FastAPI(title=<span class="text-emerald-400">"Aether Core"</span>)
         </div>
 
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-white/5 pt-6">
-          <div class="flex gap-4 text-[9px] text-gray-500 font-mono">
-            <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" class="hover:text-white transition-colors">Privacy Ledgers</a>
-          </div>
+          <!-- <div class="flex gap-4 text-[9px] text-gray-500 font-mono">
+            <a href="#" class="hover:text-brand-primary transition-colors">Terms of Service</a>
+            <a href="#" class="hover:text-brand-primary transition-colors">Privacy Ledgers</a>
+          </div> -->
           <p class="text-[9px] text-gray-500 font-mono">© 2026 Aether Academy. All rights reserved. Educational DAO.</p>
         </div>
 

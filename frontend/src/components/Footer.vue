@@ -16,11 +16,11 @@ import { Award } from 'lucide-vue-next';
         &copy; 2026 Aether E-Learning Platform. Engineered with Vue 3, Tailwind CSS & Pinia. All rights reserved.
       </p>
 
-      <div class="flex space-x-4 text-xs text-gray-400">
+      <!-- <div class="flex space-x-4 text-xs text-gray-400">
         <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
         <a href="#" class="hover:text-white transition-colors">Terms of Use</a>
         <a href="#" class="hover:text-white transition-colors">Support</a>
-      </div>
+      </div> -->
     </div>
   </footer>
 </template>

@@ -83,8 +83,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <nav class="sticky top-0 z-40 bg-brand-dark/80 backdrop-blur-md border-b border-white/5 shadow-md">
-    <div class="max-w-[1680px] mx-auto px-6 md:px-12 lg:px-16">
+  <nav class="sticky top-0 z-40 bg-brand-card/75 backdrop-blur-xl border-b border-brand-border shadow-lg shadow-black/15 transition-all duration-300">
+    <!-- Gorgeous premium neon separating line at the bottom of the navbar -->
+    <div class="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-brand-primary/20 to-transparent dark:via-brand-primary/25 pointer-events-none"></div>
+    <div class="max-w-[1680px] mx-auto px-6 md:px-12 lg:px-16 relative z-10">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <div class="flex items-center">
@@ -393,7 +395,7 @@ onUnmounted(() => {
     <!-- Mobile Menu -->
     <div 
       v-if="isMobileMenuOpen"
-      class="md:hidden bg-brand-card/95 border-b border-white/5 px-4 pt-2 pb-4 space-y-2 animate-fade-in backdrop-blur-md"
+      class="md:hidden bg-brand-card/95 border-b border-brand-border px-4 pt-2 pb-4 space-y-2 animate-fade-in backdrop-blur-md"
     >
       <router-link 
         to="/" 
@@ -486,7 +488,7 @@ onUnmounted(() => {
       </template>
 
       <!-- User Auth (Mobile) -->
-      <div class="pt-4.5 border-t border-white/5 flex flex-col space-y-2">
+      <div class="pt-4.5 border-t border-brand-border flex flex-col space-y-2">
         <!-- Theme Toggle (Mobile) -->
         <button 
           @click="toggleTheme" 
