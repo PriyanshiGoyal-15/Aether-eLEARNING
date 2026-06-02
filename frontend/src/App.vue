@@ -1,26 +1,30 @@
 <script setup>
 import Navbar from './components/Navbar.vue';
 import Footer from './components/Footer.vue';
+import NotificationProvider from './components/NotificationProvider.vue';
 import { useAuthStore } from './store/auth';
 import { useCoursesStore } from './store/courses';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { 
   Shield, User, GraduationCap, LogOut, RotateCcw, 
   CheckCircle, BellRing, Settings
 } from 'lucide-vue-next';
 
 import { onMounted } from 'vue';
+import { useNotificationStore } from './store/notifications';
 
 const authStore = useAuthStore();
 const coursesStore = useCoursesStore();
+const notifStore = useNotificationStore();
 const router = useRouter();
+const route = useRoute();
 
 onMounted(async () => {
   await coursesStore.fetchCoursesData();
   await authStore.fetchUsers();
 });
 
-const quickLogin = (role) => {
+const quickLogin = async (role) => {
   try {
     let email = '';
     let password = '';
@@ -36,39 +40,52 @@ const quickLogin = (role) => {
       password = 'admin123';
     }
     
-    authStore.login(email, password);
+    await authStore.login(email, password);
+    notifStore.showToast("Welcome Back!", `Successfully logged in as ${authStore.currentUser.name}`, "success");
     
     // Redirect to the appropriate dashboard
     if (role === 'student') router.push('/student/dashboard');
     else if (role === 'teacher') router.push('/teacher/dashboard');
     else if (role === 'admin') router.push('/admin/dashboard');
   } catch (err) {
-    alert(err.message);
+    notifStore.showToast("Login Failed", err.message, "danger");
   }
 };
 
 const handleLogout = () => {
   authStore.logout();
+  notifStore.showToast("Signed Out", "You have successfully signed out.", "info");
   router.push('/');
 };
 
 // Developer Action Shortcuts
-const triggerAutoComplete = () => {
+const triggerAutoComplete = async () => {
   if (!authStore.isAuthenticated || !authStore.isStudent) {
-    alert("Please log in as a Student first to auto-complete the course!");
+    notifStore.showToast("Authentication Required", "Please log in as a Student first to auto-complete the course!", "warning");
     return;
   }
   
-  // Auto complete "course-vue"
-  coursesStore.enrollInCourse(authStore.currentUser.id, 'course-vue');
-  coursesStore.autoCompleteCourse(authStore.currentUser.id, 'course-vue');
+  // Dynamically detect which course you are currently viewing or playing
+  let activeCourseId = 'course-vue';
+  if (route.params.courseId) {
+    activeCourseId = route.params.courseId;
+  } else if (route.params.id) {
+    activeCourseId = route.params.id;
+  }
   
-  alert("Mastering Vue 3 course instantly set to 100%! Claim your certificate in your Dashboard.");
+  try {
+    await coursesStore.enrollInCourse(authStore.currentUser.id, activeCourseId);
+    await coursesStore.autoCompleteCourse(authStore.currentUser.id, activeCourseId);
+    notifStore.showToast("Course Completed! 🎓", "Active course instantly set to 100%! Claim your certificate in your Dashboard.", "success");
+  } catch (err) {
+    console.error(err);
+    notifStore.showToast("Mock failed", "Failed to auto-complete course.", "danger");
+  }
 };
 
 const triggerMockNotification = () => {
   if (!authStore.isAuthenticated) {
-    alert("Please log in first to receive a simulated alert!");
+    notifStore.showToast("Simulation Locked", "Please log in first to receive a simulated alert!", "warning");
     return;
   }
   
@@ -79,24 +96,36 @@ const triggerMockNotification = () => {
     "success"
   );
   
-  alert("Notification alert pushed! Click the bell icon in the Navbar header.");
+  notifStore.showToast("Alert Triggered 🌟", "Notification alert pushed! Click the bell icon in the Navbar header to review.", "info");
 };
 
-const triggerDbReset = () => {
-  const confirmReset = confirm("Reset database records? All session logs and created programs will revert to factory defaults.");
+const triggerDbReset = async () => {
+  const confirmReset = await notifStore.showConfirm(
+    "Factory Reset Records?",
+    "All session logs, active enrollments, and created programs will revert to factory defaults. This action is irreversible.",
+    "danger",
+    "Reset Database",
+    "Cancel"
+  );
   if (confirmReset) {
-    coursesStore.resetDatabase();
+    await coursesStore.resetDatabase();
   }
 };
 </script>
 
 <template>
   <div class="flex flex-col min-h-screen glow-bg">
+    <!-- Notification Overlay Layer -->
+    <NotificationProvider />
+
     <!-- Navigation -->
     <Navbar />
 
     <!-- Main Router View -->
-    <main class="flex-grow container mx-auto px-4 py-8">
+    <main 
+      class="flex-grow transition-all duration-300 w-full"
+      :class="route.name === 'Home' ? 'w-full' : 'max-w-[1680px] mx-auto px-6 md:px-12 lg:px-16 py-8'"
+    >
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />

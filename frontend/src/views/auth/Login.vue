@@ -12,6 +12,7 @@ const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 const errorMsg = ref('');
+const isLoading = ref(false);
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
@@ -23,6 +24,8 @@ const handleLogin = async () => {
     errorMsg.value = 'Please complete all required fields.';
     return;
   }
+
+  isLoading.value = true;
 
   try {
     const user = await authStore.login(email.value, password.value);
@@ -39,6 +42,8 @@ const handleLogin = async () => {
     else if (user.role === 'admin') router.push('/admin/dashboard');
   } catch (err) {
     errorMsg.value = err.message || 'Login failed. Please check credentials.';
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -66,7 +71,7 @@ const fillDemoCredentials = async (role) => {
         
         <!-- Header logo/text -->
         <div class="flex flex-col items-center text-center space-y-2">
-          <span class="p-3 rounded-2xl bg-gradient-to-tr from-brand-primary to-brand-secondary text-white shadow-lg shadow-brand-primary/10">
+          <span class="p-3 rounded-2xl bg-linear-to-tr from-brand-primary to-brand-secondary text-white shadow-lg shadow-brand-primary/10">
             <Award class="w-7 h-7" />
           </span>
           <h2 class="text-2xl font-bold tracking-tight text-white font-display pt-2">Sign In to Aether</h2>
@@ -125,10 +130,12 @@ const fillDemoCredentials = async (role) => {
 
           <!-- Sign-In CTA button -->
           <button 
-            type="submit" 
-            class="w-full py-2.5 bg-brand-primary text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-primary/20 hover:bg-brand-secondary transition-all glow-btn mt-6"
+            type="submit"
+            :disabled="isLoading"
+            class="w-full py-2.5 bg-brand-primary text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-primary/20 hover:bg-brand-secondary transition-all glow-btn mt-6 flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Sign In Account
+            <span v-if="isLoading" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
+            <span>{{ isLoading ? 'Authenticating...' : 'Sign In Account' }}</span>
           </button>
         </form>
 

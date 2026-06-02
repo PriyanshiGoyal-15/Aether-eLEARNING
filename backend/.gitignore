@@ -1,0 +1,12 @@
+.env
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+db.json
+aether.db
+*.db
+*.sqlite*
+static/uploads/*
+!static/uploads/.gitkeep

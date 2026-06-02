@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 
-const API_BASE = 'https://aether-elearning.onrender.com/api';
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000/api'
+  : 'https://aether-elearning.onrender.com/api';
 
 export const useAuthStore = defineStore('auth', {
   state: () => {
@@ -63,11 +65,11 @@ export const useAuthStore = defineStore('auth', {
       return this.currentUser;
     },
 
-    async register(name, email, password, role) {
+    async register(name, email, password, role, verificationDoc = null) {
       const response = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role })
+        body: JSON.stringify({ name, email, password, role, verificationDoc })
       });
 
       if (!response.ok) {
@@ -76,8 +78,10 @@ export const useAuthStore = defineStore('auth', {
       }
 
       const newUser = await response.json();
-      this.currentUser = newUser;
-      localStorage.setItem('aether_current_user', JSON.stringify(this.currentUser));
+      if (newUser.role !== 'teacher') {
+        this.currentUser = newUser;
+        localStorage.setItem('aether_current_user', JSON.stringify(this.currentUser));
+      }
       await this.fetchUsers();
       return newUser;
     },
@@ -88,6 +92,19 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // Administrative Actions
+    async verifyTeacher(userId) {
+      const response = await fetch(`${API_BASE}/users/${userId}/verify`, {
+        method: 'POST'
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || "Failed to verify educator account.");
+      }
+
+      await this.fetchUsers();
+    },
+
     async toggleSuspension(userId) {
       if (this.currentUser?.id === userId) {
         throw new Error("Cannot suspend yourself!");

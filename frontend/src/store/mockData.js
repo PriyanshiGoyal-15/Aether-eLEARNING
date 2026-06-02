@@ -46,6 +46,12 @@ export const INITIAL_COURSES = [
     studentsCount: 1250,
     duration: "4.5 Hours",
     rejectionReason: "",
+    learningOutcomes: [
+      "Scaffold dynamic responsive layouts using Vue framework modules",
+      "Understand responsive components, models, and data-flows",
+      "Implement secure access configurations and routing limits",
+      "Create full modular portfolios with clean, production code standards"
+    ],
     modules: [
       {
         id: "mod-vue-1",
@@ -109,6 +115,12 @@ export const INITIAL_COURSES = [
     studentsCount: 380,
     duration: "6 Hours",
     rejectionReason: "",
+    learningOutcomes: [
+      "Design and deploy production-ready RESTful APIs with Python & FastAPI",
+      "Establish seamless connections to cloud MongoDB Atlas database engines",
+      "Secure backend endpoints using secure authentication and custom middleware",
+      "Build asynchronous microservices with robust error handling and schemas"
+    ],
     modules: [
       {
         id: "mod-api-1",
@@ -150,6 +162,12 @@ export const INITIAL_COURSES = [
     studentsCount: 920,
     duration: "3.5 Hours",
     rejectionReason: "",
+    learningOutcomes: [
+      "Master premium dark mode design aesthetics, gradients and typography",
+      "Understand the mechanics of modern visual patterns like glassmorphism",
+      "Create smooth transitions and subtle micro-animations to wow users",
+      "Define clean UI styling tokens with vanilla tailwind configuration systems"
+    ],
     modules: [
       {
         id: "mod-design-1",

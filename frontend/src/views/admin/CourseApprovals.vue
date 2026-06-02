@@ -7,7 +7,10 @@ import {
   ChevronDown, ChevronUp, AlertCircle, MessageSquare
 } from 'lucide-vue-next';
 
+import { useNotificationStore } from '../../store/notifications';
+
 const coursesStore = useCoursesStore();
+const notifStore = useNotificationStore();
 const router = useRouter();
 
 // Pending course listings
@@ -37,27 +40,27 @@ const cancelRejection = () => {
 const handleApproval = async (courseId) => {
   try {
     await coursesStore.approveCourse(courseId);
-    alert("Course approved! It is now visible to all students in the public catalog.");
+    notifStore.showToast("Course Approved! 🎉", "The course is now live and visible to all students.", "success");
   } catch (err) {
     console.error(err);
-    alert(err.message || "Failed to approve course.");
+    notifStore.showToast("Approval Failed", err.message || "Failed to approve course.", "danger");
   }
 };
 
 const handleRejection = async (courseId) => {
   if (!rejectionReasonText.value) {
-    alert("Please provide a rejection reason so the instructor knows what to edit.");
+    notifStore.showToast("Feedback Required", "Please provide a rejection reason so the instructor knows what to edit.", "warning");
     return;
   }
   
   try {
     await coursesStore.rejectCourse(courseId, rejectionReasonText.value);
-    alert("Course rejected and returned to the instructor's draft dashboard.");
+    notifStore.showToast("Proposal Returned", "Course has been returned to the instructor's drafts.", "info");
     rejectingCourseId.value = null;
     rejectionReasonText.value = '';
   } catch (err) {
     console.error(err);
-    alert(err.message || "Failed to reject course.");
+    notifStore.showToast("Rejection Failed", err.message || "Failed to reject course.", "danger");
   }
 };
 </script>

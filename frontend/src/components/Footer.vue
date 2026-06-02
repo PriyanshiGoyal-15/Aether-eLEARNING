@@ -4,7 +4,7 @@ import { Award } from 'lucide-vue-next';
 
 <template>
   <footer class="bg-brand-dark border-t border-white/5 py-8 mt-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+    <div class="max-w-[1680px] mx-auto px-6 md:px-12 lg:px-16 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
       <div class="flex items-center space-x-2">
         <span class="p-1.5 rounded-lg bg-gradient-to-tr from-brand-primary to-brand-secondary text-white">
           <Award class="w-4.5 h-4.5" />

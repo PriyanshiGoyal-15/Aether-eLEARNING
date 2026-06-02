@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from './auth';
 
-const API_BASE = 'https://aether-elearning.onrender.com/api';
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000/api'
+  : 'https://aether-elearning.onrender.com/api';
 
 export const useCoursesStore = defineStore('courses', {
   state: () => {
@@ -11,6 +13,8 @@ export const useCoursesStore = defineStore('courses', {
       bookmarks: [],
       reviews: [],
       notifications: [],
+      emails: [],
+      payments: [],
     };
   },
 
@@ -46,9 +50,22 @@ export const useCoursesStore = defineStore('courses', {
       return state.courses.filter(c => bookmarkedIds.includes(c.id) && c.status === 'approved');
     },
 
-    // Get Course Reviews
+    // Get Course Reviews (excluding hidden ones for students/guests)
     getCourseReviews: (state) => (courseId) => {
-      return state.reviews.filter(r => r.courseId === courseId);
+      return state.reviews.filter(r => r.courseId === courseId && !r.hidden);
+    },
+
+    // Dynamic rating calculator from verified reviews
+    getCourseRating: (state) => (courseId) => {
+      const courseReviews = state.reviews.filter(r => r.courseId === courseId && !r.hidden);
+      if (courseReviews.length === 0) return 0.0; // Default to 0.0 if no reviews exist
+      const total = courseReviews.reduce((sum, r) => sum + r.rating, 0);
+      return Number((total / courseReviews.length).toFixed(1));
+    },
+
+    // Dynamic reviews count calculator from verified reviews
+    getCourseReviewsCount: (state) => (courseId) => {
+      return state.reviews.filter(r => r.courseId === courseId && !r.hidden).length;
     },
 
     // Get Unread Notification Count
@@ -101,7 +118,25 @@ export const useCoursesStore = defineStore('courses', {
             progressPercent: enroll.progressPercent,
             enrolledDate: enroll.enrolledDate
           };
-        });
+        }).filter(e => e.studentName !== "Unknown Student");
+    },
+
+    // Quiz Getters
+    getAllQuizzes: (state) => state.quizzes,
+    getTeacherQuizzes: (state) => (teacherId) => state.quizzes.filter(q => q.teacherId === teacherId),
+    getStudentAttempts: (state) => (studentId) => state.quizAttempts.filter(a => a.studentId === studentId),
+    getBestAttempt: (state) => (quizId, studentId) => {
+      const attempts = state.quizAttempts.filter(a => a.quizId === quizId && a.studentId === studentId);
+      if (attempts.length === 0) return null;
+      return attempts.reduce((best, curr) => curr.score > best.score ? curr : best, attempts[0]);
+    },
+
+
+    // Email Getters
+    getUserEmails: (state) => (email) => {
+      return state.emails
+        .filter(e => e.to === email)
+        .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt));
     },
 
     // Admin Dashboard Statistics
@@ -121,6 +156,7 @@ export const useCoursesStore = defineStore('courses', {
       const popularCourses = state.courses
         .filter(c => c.status === 'approved')
         .map(c => ({
+          id: c.id,
           title: c.title,
           enrollmentsCount: enrollmentCounts[c.id] || 0,
           category: c.category,
@@ -129,13 +165,28 @@ export const useCoursesStore = defineStore('courses', {
         .sort((a, b) => b.enrollmentsCount - a.enrollmentsCount)
         .slice(0, 5);
 
+      const totalRevenue = state.payments
+        .filter(p => p.status === 'captured')
+        .reduce((sum, p) => sum + (p.adminRevenue || 0), 0);
+
       return {
         totalStudents,
         totalTeachers,
         activeCourses,
         pendingApprovals,
-        popularCourses
+        popularCourses,
+        totalRevenue
       };
+    },
+
+    getTeacherRevenue: (state) => (teacherId) => {
+      const teacherCourseIds = state.courses
+        .filter(c => c.teacherId === teacherId)
+        .map(c => c.id);
+      
+      return state.payments
+        .filter(p => p.status === 'captured' && teacherCourseIds.includes(p.courseId))
+        .reduce((sum, p) => sum + (p.teacherRevenue || 0), 0);
     }
   },
 
@@ -147,11 +198,27 @@ export const useCoursesStore = defineStore('courses', {
         if (!response.ok) throw new Error('Failed to load database');
         const db = await response.json();
 
-        this.courses = db.courses;
+        this.courses = (db.courses || []).map(course => {
+          if (!course.modules) course.modules = [];
+          course.modules = course.modules.map((mod, modIdx) => {
+            if (!mod.id) mod.id = `mod-${course.id}-${modIdx}`;
+            if (!mod.lessons) mod.lessons = [];
+            mod.lessons = mod.lessons.map((les, lesIdx) => {
+              if (!les.id) les.id = `les-${course.id}-${modIdx}-${lesIdx}`;
+              return les;
+            });
+            return mod;
+          });
+          return course;
+        });
         this.enrollments = db.enrollments;
         this.bookmarks = db.bookmarks || [];
         this.reviews = db.reviews;
         this.notifications = db.notifications;
+        this.emails = db.emails || [];
+        this.quizzes = db.quizzes || [];
+        this.quizAttempts = db.quizAttempts || [];
+        this.payments = db.payments || [];
 
         // Also hydrate authStore users
         authStore.users = db.users;
@@ -167,6 +234,27 @@ export const useCoursesStore = defineStore('courses', {
       if (!response.ok) throw new Error("Failed to enroll in course.");
       await this.fetchCoursesData();
     },
+
+    async createPaymentOrder(paymentData) {
+      const response = await fetch(`${API_BASE}/v1/payments/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentData)
+      });
+      if (!response.ok) throw new Error("Failed to create payment order.");
+      return await response.json();
+    },
+
+    async verifyPayment(verificationData) {
+      const response = await fetch(`${API_BASE}/v1/payments/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(verificationData)
+      });
+      if (!response.ok) throw new Error("Payment verification failed.");
+      return await response.json();
+    },
+
 
     async toggleLessonCompletion(studentId, courseId, lessonId) {
       const response = await fetch(`${API_BASE}/courses/${courseId}/lesson-toggle?studentId=${studentId}&lessonId=${lessonId}`, {
@@ -198,6 +286,14 @@ export const useCoursesStore = defineStore('courses', {
       await this.fetchCoursesData();
     },
 
+    async toggleReviewVisibility(reviewId) {
+      const response = await fetch(`${API_BASE}/reviews/${reviewId}/toggle-visibility`, {
+        method: 'POST'
+      });
+      if (!response.ok) throw new Error("Failed to toggle review visibility.");
+      await this.fetchCoursesData();
+    },
+
     async addNotification(userId, title, message, type = 'info') {
       const response = await fetch(`${API_BASE}/notifications`, {
         method: 'POST',
@@ -216,7 +312,7 @@ export const useCoursesStore = defineStore('courses', {
       await this.fetchCoursesData();
     },
 
-    async createCourse(teacherId, teacherName, title, description, category, difficulty, thumbnail, modules) {
+    async createCourse(teacherId, teacherName, title, description, category, difficulty, thumbnail, price, modules, learningOutcomes) {
       const response = await fetch(`${API_BASE}/courses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -228,13 +324,50 @@ export const useCoursesStore = defineStore('courses', {
           category,
           difficulty,
           thumbnail,
-          modules
+          price,
+          modules,
+          learningOutcomes
         })
       });
       if (!response.ok) throw new Error("Failed to create course.");
       const newCourse = await response.json();
       await this.fetchCoursesData();
       return newCourse;
+    },
+
+    async updateCourse(courseId, teacherId, teacherName, title, description, category, difficulty, thumbnail, price, modules, learningOutcomes) {
+      const response = await fetch(`${API_BASE}/courses/${courseId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          teacherId,
+          teacherName,
+          title,
+          description,
+          category,
+          difficulty,
+          thumbnail,
+          price,
+          modules,
+          learningOutcomes
+        })
+      });
+      if (!response.ok) throw new Error("Failed to update course.");
+      const updatedCourse = await response.json();
+      await this.fetchCoursesData();
+      return updatedCourse;
+    },
+
+    async uploadFile(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await fetch(`${API_BASE}/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) throw new Error("Failed to upload file.");
+      const result = await response.json();
+      return result.url;
     },
 
     async approveCourse(courseId) {
@@ -270,6 +403,37 @@ export const useCoursesStore = defineStore('courses', {
       if (!response.ok) throw new Error("Failed to reset database.");
       localStorage.clear();
       window.location.reload();
+    },
+
+    // Quiz Actions
+    async createQuiz(quizData) {
+      const response = await fetch(`${API_BASE}/quizzes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(quizData)
+      });
+      if (!response.ok) throw new Error("Failed to create quiz.");
+      await this.fetchCoursesData();
+    },
+
+    async deleteQuiz(quizId) {
+      const response = await fetch(`${API_BASE}/quizzes/${quizId}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) throw new Error("Failed to delete quiz.");
+      await this.fetchCoursesData();
+    },
+
+    async submitQuizAttempt(quizId, studentId, answers, timeTakenSeconds) {
+      const response = await fetch(`${API_BASE}/quizzes/${quizId}/attempt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, answers, timeTakenSeconds })
+      });
+      if (!response.ok) throw new Error("Failed to submit quiz attempt.");
+      const result = await response.json();
+      await this.fetchCoursesData();
+      return result;
     }
   }
 });

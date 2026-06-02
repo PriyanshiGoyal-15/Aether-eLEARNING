@@ -1,11 +1,13 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import { Bar } from 'vue-chartjs';
 import { useCoursesStore } from '../../store/courses';
 import { useAuthStore } from '../../store/auth';
 import { useRouter } from 'vue-router';
 import { 
   ShieldCheck, Users, BookOpen, Clock, ClipboardCheck, 
-  TrendingUp, Award, ArrowRight, UserCheck, Star
+  TrendingUp, Award, ArrowRight, UserCheck, Star, DollarSign
 } from 'lucide-vue-next';
 
 const coursesStore = useCoursesStore();
@@ -14,6 +16,40 @@ const router = useRouter();
 
 const adminStats = computed(() => coursesStore.getAdminStats);
 const popularCourses = computed(() => adminStats.value.popularCourses);
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+
+const chartData = computed(() => {
+  return {
+    labels: popularCourses.value.map(c => c.title.substring(0, 15) + (c.title.length > 15 ? '...' : '')),
+    datasets: [
+      {
+        label: 'Course Enrollments',
+        backgroundColor: '#6366f1', // brand-primary
+        borderRadius: 6,
+        data: popularCourses.value.map(c => c.enrollmentsCount)
+      }
+    ]
+  }
+});
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { labels: { color: '#9ca3af' } },
+  },
+  scales: {
+    y: { ticks: { color: '#9ca3af', precision: 0 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+    x: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+  }
+};
+
+const getCourseAdminRevenue = (courseId) => {
+  return coursesStore.payments
+    .filter(p => p.status === 'captured' && p.courseId === courseId)
+    .reduce((sum, p) => sum + (p.adminRevenue || 0), 0);
+};
 </script>
 
 <template>
@@ -43,7 +79,7 @@ const popularCourses = computed(() => adminStats.value.popularCourses);
           class="px-5 py-2.5 bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-brand-primary/15 flex items-center space-x-1.5"
         >
           <ClipboardCheck class="w-4 h-4" />
-          <span>Moderate Courses Queue</span>
+          <span>Approval Courses Queue</span>
         </router-link>
       </div>
     </div>
@@ -113,6 +149,38 @@ const popularCourses = computed(() => adminStats.value.popularCourses);
           <ClipboardCheck class="w-6 h-6" />
         </div>
       </div>
+      
+
+      <!-- 5. Platform Revenue -->
+      <div class="glass-panel p-5 rounded-2xl border border-white/5 bg-brand-card flex items-center justify-between">
+        <div class="space-y-2">
+          <p class="text-[10px] font-bold text-gray-450 uppercase tracking-widest">Platform Revenue</p>
+          <h3 class="text-2xl font-extrabold text-white">₹{{ (adminStats.totalRevenue / 100).toFixed(2) }}</h3>
+          <p class="text-[9px] text-brand-primary font-semibold flex items-center space-x-0.5">
+            <TrendingUp class="w-3.5 h-3.5" />
+            <span>30% Admin Split</span>
+          </p>
+        </div>
+        <div class="p-3 bg-brand-primary/10 border border-brand-primary/20 text-brand-primary rounded-xl">
+          <DollarSign class="w-6 h-6" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Estimated Revenue Split & Policy Disclosure -->
+    <div class="glass-panel p-4.5 rounded-2xl border border-white/5 bg-brand-card/45 flex items-start space-x-3.5 shadow-xl animate-fade-in">
+      <div class="p-2 bg-brand-primary/10 border border-brand-primary/20 text-brand-primary rounded-xl shrink-0 mt-0.5 animate-pulse">
+        <DollarSign class="w-4 h-4" />
+      </div>
+      <div class="space-y-1 text-left">
+        <h4 class="text-xs font-bold text-white tracking-wide">
+          Platform Revenue & Commission Split Disclosure
+        </h4>
+     <p class="text-[10px] md:text-xs text-gray-400 leading-relaxed font-light">
+  Platform revenue displays aggregate platform earnings net of instructor payables under our standard<strong class="text-white font-bold"> 70% Instructor / 30% Platform split</strong>
+  commission structure. Platform revenue records are processed net of refund holds and regional banking transactional overheads. Monthly platform settlements are reconciled on the 1st of each calendar month.
+</p>
+      </div>
     </div>
 
     <!-- Analytics Graphs & Popular programs details -->
@@ -134,6 +202,7 @@ const popularCourses = computed(() => adminStats.value.popularCourses);
                   <th class="px-6 py-4">Topic Category</th>
                   <th class="px-6 py-4">Reviews Score</th>
                   <th class="px-6 py-4 text-center">Enrollments</th>
+                  <th class="px-6 py-4">Admin Revenue</th>
                 </tr>
               </thead>
               
@@ -150,13 +219,16 @@ const popularCourses = computed(() => adminStats.value.popularCourses);
                     </div>
                   </td>
                   <td class="px-6 py-4 text-center font-bold text-brand-accent">{{ course.enrollmentsCount }} learners</td>
+                  <td class="px-6 py-4 font-bold text-brand-primary">
+                    ₹{{ (getCourseAdminRevenue(course.id) / 100).toFixed(2) }}
+                  </td>
                 </tr>
               </tbody>
 
               <tbody v-else>
                 <tr>
                   <td colspan="4" class="px-6 py-12 text-center text-gray-500 font-medium">
-                    No active student enrollments located in platform databases.
+                    Not enough data generated yet. Waiting for learner activity.
                   </td>
                 </tr>
               </tbody>
@@ -164,26 +236,16 @@ const popularCourses = computed(() => adminStats.value.popularCourses);
           </div>
         </div>
       </div>
-
-      <!-- Quick Platform tips card -->
-      <div class="glass-panel rounded-3xl p-6 border border-white/5 bg-brand-card flex flex-col space-y-4 text-xs text-gray-300">
-        <h3 class="text-sm font-bold text-white font-display flex items-center space-x-2">
-          <ShieldCheck class="w-4.5 h-4.5 text-brand-warning" />
-          <span>Operational Control Guidelines</span>
-        </h3>
-        
-        <p class="leading-relaxed">
-          As an Administrator, you have complete governance over Aether Academy's course listings.
-        </p>
-
-        <div class="border-t border-white/5 pt-4 space-y-3">
-          <div class="flex items-start space-x-2.5">
-            <span class="p-1 rounded bg-brand-warning/15 border border-brand-warning/25 text-brand-warning font-bold text-[9px] mt-0.5">QUEUE</span>
-            <p>Courses drafted by teachers are set to "Pending" and must be manually inspected and resolved.</p>
-          </div>
-          <div class="flex items-start space-x-2.5">
-            <span class="p-1 rounded bg-brand-danger/15 border border-brand-danger/25 text-brand-danger font-bold text-[9px] mt-0.5">BAN</span>
-            <p>You can suspend student/instructor accounts to immediately block platform login permissions.</p>
+      <!-- Visual Analytics Bar Chart -->
+      <div class="lg:col-span-1 space-y-4">
+        <h2 class="text-lg font-bold text-white font-display flex items-center space-x-2">
+          <TrendingUp class="w-4.5 h-4.5 text-brand-primary" />
+          <span>Enrollments Graph</span>
+        </h2>
+        <div class="glass-panel p-5 rounded-3xl border border-white/5 bg-brand-card shadow-2xl h-[300px]">
+          <Bar v-if="popularCourses.length > 0" :data="chartData" :options="chartOptions" />
+          <div v-else class="flex h-full items-center justify-center text-xs text-gray-500">
+            No active enrollment data to chart.
           </div>
         </div>
       </div>

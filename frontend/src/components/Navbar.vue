@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import { 
   Menu, X, ChevronDown, LogOut, LayoutDashboard, BookOpen, 
   PlusCircle, Users, ClipboardCheck, UserCheck, ShieldCheck, Award,
-  Bell, Info, CheckCircle, AlertTriangle, AlertCircle, Sun, Moon
+  Bell, Info, CheckCircle, AlertTriangle, AlertCircle, Sun, Moon, Gamepad2, Mail
 } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
@@ -84,7 +84,7 @@ onUnmounted(() => {
 
 <template>
   <nav class="sticky top-0 z-40 bg-brand-dark/80 backdrop-blur-md border-b border-white/5 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-[1680px] mx-auto px-6 md:px-12 lg:px-16">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <div class="flex items-center">
@@ -116,6 +116,22 @@ onUnmounted(() => {
               <LayoutDashboard class="w-4 h-4" />
               <span>Dashboard</span>
             </router-link>
+            <router-link 
+              to="/student/courses" 
+              class="flex items-center space-x-1.5 px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
+              active-class="bg-brand-primary/10 text-brand-primary font-semibold"
+            >
+              <BookOpen class="w-4 h-4" />
+              <span>Explore Courses</span>
+            </router-link>
+            <router-link 
+              to="/student/quizzes" 
+              class="flex items-center space-x-1.5 px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
+              active-class="bg-brand-primary/10 text-brand-primary font-semibold"
+            >
+              <Gamepad2 class="w-4 h-4" />
+              <span>Quiz Arena</span>
+            </router-link>
           </template>
 
           <!-- Teacher Links -->
@@ -144,6 +160,14 @@ onUnmounted(() => {
               <Users class="w-4 h-4" />
               <span>Gradebook</span>
             </router-link>
+            <!-- <router-link 
+              to="/teacher/quizzes" 
+              class="flex items-center space-x-1.5 px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
+              active-class="bg-brand-primary/10 text-brand-primary font-semibold"
+            >
+              <Gamepad2 class="w-4 h-4" />
+              <span>Quiz Manager</span>
+            </router-link> -->
           </template>
 
           <!-- Admin Links -->
@@ -197,6 +221,21 @@ onUnmounted(() => {
           </template>
 
           <template v-else>
+            <!-- Inbox Icon -->
+            <router-link 
+              to="/inbox" 
+              class="p-2 text-gray-400 hover:text-white bg-white/5 border border-white/5 hover:bg-white/10 rounded-xl transition-all relative flex items-center justify-center cursor-pointer"
+              title="My Inbox"
+            >
+              <Mail class="w-4.5 h-4.5" />
+              <span 
+                v-if="coursesStore.getUserEmails(authStore.currentUser.email).length > 0"
+                class="absolute -top-1 -right-1 bg-brand-primary text-white text-[8px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center animate-pulse shadow-md shadow-brand-primary/40"
+              >
+                {{ coursesStore.getUserEmails(authStore.currentUser.email).length }}
+              </span>
+            </router-link>
+
             <!-- Notifications Dropdown Bell -->
             <div id="notif-dropdown-container" class="relative">
               <button 
@@ -373,6 +412,20 @@ onUnmounted(() => {
         >
           Student Dashboard
         </router-link>
+        <router-link 
+          to="/student/courses" 
+          class="block px-3.5 py-2 rounded-xl text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+          @click="isMobileMenuOpen = false"
+        >
+          Explore Courses
+        </router-link>
+        <router-link 
+          to="/student/quizzes" 
+          class="block px-3.5 py-2 rounded-xl text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+          @click="isMobileMenuOpen = false"
+        >
+          Quiz Arena
+        </router-link>
       </template>
 
       <!-- Teacher Menu -->
@@ -397,6 +450,13 @@ onUnmounted(() => {
           @click="isMobileMenuOpen = false"
         >
           Gradebook
+        </router-link>
+        <router-link 
+          to="/teacher/quizzes" 
+          class="block px-3.5 py-2 rounded-xl text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+          @click="isMobileMenuOpen = false"
+        >
+          Quiz Manager
         </router-link>
       </template>
 

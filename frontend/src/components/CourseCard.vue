@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from '../store/auth';
 import { useCoursesStore } from '../store/courses';
-import { Star, BookOpen, Clock, PlayCircle, CheckCircle, HelpCircle, Eye, Bookmark } from 'lucide-vue-next';
+import { Star, BookOpen, Clock, PlayCircle, CheckCircle, HelpCircle, Eye, Bookmark, Lock } from 'lucide-vue-next';
 
 const props = defineProps({
   course: {
@@ -87,8 +87,8 @@ const statusBadgeClass = computed(() => {
 
         <div class="flex items-center space-x-1 shrink-0">
           <Star class="w-3.5 h-3.5 text-brand-warning fill-brand-warning" />
-          <span class="font-semibold text-gray-250">{{ course.rating.toFixed(1) }}</span>
-          <span class="text-gray-500">({{ course.reviewsCount }})</span>
+          <span class="font-semibold text-gray-250">{{ coursesStore.getCourseRating(course.id).toFixed(1) }}</span>
+          <span class="text-gray-500">({{ coursesStore.getCourseReviewsCount(course.id) }})</span>
         </div>
       </div>
 
@@ -142,14 +142,14 @@ const statusBadgeClass = computed(() => {
 
       <!-- Action Button Row -->
       <div class="mt-4.5 pt-0 shrink-0">
-        <!-- Guest View Details -->
+        <!-- Guest View Details (Redirect to Login) -->
         <router-link 
           v-if="!authStore.isAuthenticated" 
-          :to="`/courses/${course.id}`" 
-          class="w-full text-center flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-white transition-colors"
+          :to="`/login?redirect=/courses/${course.id}`" 
+          class="w-full text-center flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-semibold bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary transition-all duration-300 border border-brand-primary/20"
         >
-          <Eye class="w-4 h-4" />
-          <span>View Details</span>
+          <Lock class="w-3.5 h-3.5 animate-pulse" />
+          <span>Login to View Details</span>
         </router-link>
 
         <!-- Student Views -->

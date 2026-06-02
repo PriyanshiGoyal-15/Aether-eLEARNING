@@ -7,7 +7,10 @@ import {
   Trash, Search, Filter, ShieldCheck
 } from 'lucide-vue-next';
 
+import { useNotificationStore } from '../../store/notifications';
+
 const authStore = useAuthStore();
+const notifStore = useNotificationStore();
 const router = useRouter();
 
 const searchQuery = ref('');
@@ -19,9 +22,17 @@ const roles = ['All', 'student', 'teacher', 'admin'];
 // Full users list
 const users = computed(() => authStore.users);
 
-// Filtered users list
+// Pending verification teachers list
+const pendingTeachers = computed(() => {
+  return users.value.filter(user => user.role === 'teacher' && user.verificationStatus === 'pending');
+});
+
+// Filtered users list (excluding pending teachers so they don't clutter normal active roster directory)
 const filteredUsers = computed(() => {
   return users.value.filter(user => {
+    // Hide pending teachers from the main database list until approved
+    if (user.role === 'teacher' && user.verificationStatus === 'pending') return false;
+
     const matchesSearch = user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                           user.email.toLowerCase().includes(searchQuery.value.toLowerCase());
     
@@ -31,24 +42,39 @@ const filteredUsers = computed(() => {
   });
 });
 
+const handleVerifyTeacher = async (userId, name) => {
+  try {
+    await authStore.verifyTeacher(userId);
+    notifStore.showToast("Educator Verified", `Teacher "${name}" has been successfully approved and notified!`, "success");
+  } catch (err) {
+    notifStore.showToast("Approval Failed", err.message, "danger");
+  }
+};
+
 const handleToggleSuspension = async (userId) => {
   try {
     await authStore.toggleSuspension(userId);
-    alert("User suspension status updated successfully!");
+    notifStore.showToast("Directory Updated", "User suspension status updated successfully!", "success");
   } catch (err) {
-    alert(err.message);
+    notifStore.showToast("Update Failed", err.message, "danger");
   }
 };
 
 const handleDeleteUser = async (userId, name) => {
-  const confirmDelete = confirm(`Are you sure you want to permanently delete user account "${name}"? This action is irreversible.`);
+  const confirmDelete = await notifStore.showConfirm(
+    "Delete User Profile?",
+    `Are you sure you want to permanently delete user account "${name}"? All dashboard logs and history will be cleared. This action is irreversible.`,
+    "danger",
+    "Delete Account",
+    "Cancel"
+  );
   if (!confirmDelete) return;
 
   try {
     await authStore.deleteUser(userId);
-    alert(`Account "${name}" successfully deleted from platform directories.`);
+    notifStore.showToast("Account Deleted", `Account "${name}" successfully deleted from platform directories.`, "success");
   } catch (err) {
-    alert(err.message);
+    notifStore.showToast("Deletion Failed", err.message, "danger");
   }
 };
 </script>
@@ -100,6 +126,57 @@ const handleDeleteUser = async (userId, name) => {
         <span>User Accounts Directory</span>
       </h1>
       <p class="text-xs text-gray-450">Review system registration lists, assign suspension locks, or remove accounts.</p>
+    </div>
+
+    <!-- Pending Teacher Approvals Widget Queue -->
+    <div v-if="pendingTeachers.length > 0" class="space-y-4 animate-fade-in border-b border-white/5 pb-8 mb-4">
+      <h2 class="text-xs font-bold text-brand-accent uppercase tracking-wider flex items-center space-x-2 font-display">
+        <ShieldAlert class="w-4.5 h-4.5 text-brand-accent" />
+        <span>Pending Teacher Approvals ({{ pendingTeachers.length }})</span>
+      </h2>
+      
+      <div class="grid grid-cols-1 gap-4">
+        <div 
+          v-for="teacher in pendingTeachers" 
+          :key="teacher.id"
+          class="glass-panel p-5 rounded-2xl border border-brand-accent/25 bg-brand-accent/[0.01] hover:bg-brand-accent/[0.02] transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-4.5"
+        >
+          <div class="space-y-2 max-w-xl text-left">
+            <div class="flex items-center space-x-3.5">
+              <h3 class="text-sm font-bold text-white font-display">{{ teacher.name }}</h3>
+              <span class="px-2.5 py-0.5 rounded-full text-[8px] font-bold uppercase bg-brand-accent/15 text-brand-accent border border-brand-accent/20 tracking-wider">Awaiting Verification</span>
+            </div>
+            <p class="text-[10px] text-gray-400">Registered Email: <span class="text-white font-medium">{{ teacher.email }}</span> • Joined: {{ teacher.joinedDate }}</p>
+            
+            <!-- Credentials container -->
+            <div class="p-3 bg-brand-dark/45 border border-white/5 rounded-xl text-xs space-y-1">
+              <span class="text-[9px] font-bold uppercase text-brand-accent tracking-widest block mb-0.5">Submitted Verification Credentials:</span>
+              <p class="text-gray-300 font-light leading-relaxed italic text-[11px]">
+                "{{ teacher.verificationDoc || 'No qualifications specified.' }}"
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick approval action -->
+          <div class="flex items-center space-x-3 shrink-0 self-stretch md:self-auto justify-end">
+            <button 
+              @click="handleVerifyTeacher(teacher.id, teacher.name)"
+              class="px-4.5 py-2.5 bg-brand-accent hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-brand-accent/15 flex items-center space-x-2 cursor-pointer"
+            >
+              <UserCheck class="w-4 h-4 shrink-0" />
+              <span>Verify & Approve Educator</span>
+            </button>
+            
+            <button 
+              @click="handleDeleteUser(teacher.id, teacher.name)"
+              class="p-2.5 bg-brand-danger/10 border border-brand-danger/20 text-brand-danger hover:bg-brand-danger hover:text-white rounded-xl transition-all cursor-pointer"
+              title="Reject & Delete Application"
+            >
+              <Trash class="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Users roster Table -->

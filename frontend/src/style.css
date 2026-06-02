@@ -36,7 +36,7 @@
   --color-brand-accent: #10B981;
   --color-brand-danger: #F43F5E;
   --color-brand-warning: #F59E0B;
-  
+
   --font-sans: "Inter", sans-serif;
   --font-display: "Outfit", sans-serif;
 }
@@ -59,18 +59,18 @@
 
 @utility glow-bg {
   background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%),
-              radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.05), transparent 45%);
+    radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.05), transparent 45%);
 }
 
 @utility glow-btn {
   position: relative;
   overflow: hidden;
   transition: all 0.3s;
-  
+
   &:hover {
     box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
   }
-  
+
   &:active {
     transform: scale(0.95);
   }
@@ -107,8 +107,15 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -129,79 +136,255 @@ body {
 
 /* Light Theme Element Overrides */
 :root.light {
-  .text-white, 
+
+  .text-white,
   .font-display.text-transparent {
     color: #111827 !important;
     background-image: none !important;
     -webkit-text-fill-color: initial !important;
   }
+
   .text-transparent.bg-gradient-to-r {
     background-image: linear-gradient(to right, #4F46E5, #06B6D4) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
   }
+
   .text-gray-300 {
     color: #374151 !important;
   }
+
   .text-gray-400 {
     color: #4B5563 !important;
   }
+
   .text-gray-450 {
     color: #555E6D !important;
   }
+
   .text-gray-500 {
     color: #6B7280 !important;
   }
+
   .border-white\/5 {
     border-color: rgba(0, 0, 0, 0.05) !important;
   }
+
   .border-white\/10 {
     border-color: rgba(0, 0, 0, 0.08) !important;
   }
+
   .bg-white\/5 {
     background-color: rgba(0, 0, 0, 0.04) !important;
   }
+
   .bg-white\/10 {
     background-color: rgba(0, 0, 0, 0.08) !important;
   }
+
   .bg-white\/[0.01] {
     background-color: rgba(0, 0, 0, 0.01) !important;
   }
+
   .bg-white\/[0.02] {
     background-color: rgba(0, 0, 0, 0.02) !important;
   }
+
   .bg-brand-card\/60 {
     background-color: rgba(255, 255, 255, 0.8) !important;
   }
+
   .bg-brand-card\/45 {
     background-color: rgba(243, 244, 246, 0.8) !important;
   }
+
   .bg-brand-dark\/50 {
     background-color: rgba(0, 0, 0, 0.03) !important;
   }
+
   .bg-brand-dark\/80 {
     background-color: rgba(243, 244, 246, 0.8) !important;
   }
+
   .bg-brand-card\/95 {
     background-color: rgba(255, 255, 255, 0.95) !important;
   }
+
   .bg-brand-dark\/20 {
     background-color: rgba(0, 0, 0, 0.02) !important;
   }
+
   .bg-brand-dark\/25 {
     background-color: rgba(0, 0, 0, 0.03) !important;
   }
+
   .bg-slate-800 {
     background-color: #E5E7EB !important;
   }
+
   .glass-panel {
     background-color: rgba(255, 255, 255, 0.75) !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
   }
+
   .glow-bg {
     background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 45%),
-                radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.02), transparent 45%) !important;
+      radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.02), transparent 45%) !important;
+  }
+}
+
+/* -----------------------------------------
+   AETHER ULTRA PREMIUM ANIMATIONS & STYLES 
+   ----------------------------------------- */
+
+/* Terminal Typewriter Cursor */
+@keyframes blink-cursor {
+
+  from,
+  to {
+    border-color: transparent
+  }
+
+  50% {
+    border-color: #6366F1
+  }
+}
+
+.terminal-cursor {
+  border-right: 2px solid #6366F1;
+  animation: blink-cursor 0.75s step-end infinite;
+}
+
+/* SVG Flow Pulse connecting pathways */
+@keyframes pulse-flow {
+  0% {
+    stroke-dashoffset: 100;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.svg-flow-path {
+  stroke-dasharray: 8, 12;
+  animation: pulse-flow 3s linear infinite;
+}
+
+/* Glowing Neon Elements */
+.text-glow-primary {
+  text-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+}
+
+.text-glow-accent {
+  text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+
+.neon-border-primary {
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+.neon-border-accent {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Particle and Glow Breathing Orbs */
+@keyframes breathe-glow {
+
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: scale(1) translate(0px, 0px);
+  }
+
+  50% {
+    opacity: 0.25;
+    transform: scale(1.15) translate(15px, -15px);
+  }
+}
+
+.animate-breathe-glow-1 {
+  animation: breathe-glow 10s ease-in-out infinite;
+}
+
+.animate-breathe-glow-2 {
+  animation: breathe-glow 14s ease-in-out infinite;
+}
+
+/* IDE Simulator Grid Background Drift */
+@keyframes grid-drift {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 30px 30px;
+  }
+}
+
+.animate-grid-drift {
+  animation: grid-drift 8s linear infinite;
+  background-size: 30px 30px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* 3D Parallax Tilt Element Support */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
+  position: relative;
+}
+
+.tilt-card-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 180px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.08), transparent 80%);
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 5;
+  border-radius: inherit;
+}
+
+.tilt-card:hover .tilt-card-glow {
+  opacity: 1;
+}
+
+/* Dynamic Glow Buttons */
+.btn-glow-pulse {
+  position: relative;
+}
+
+.btn-glow-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(90deg, #6366F1, #10B981, #6366F1);
+  background-size: 200% 100%;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.6;
+  filter: blur(8px);
+  transition: opacity 0.3s;
+}
+
+.btn-glow-pulse:hover::after {
+  opacity: 1;
+  animation: move-gradient 2s linear infinite;
+}
+
+@keyframes move-gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  100% {
+    background-position: 200% 0%;
   }
 }
