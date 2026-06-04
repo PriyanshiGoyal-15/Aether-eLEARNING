@@ -49,7 +49,7 @@ const quickLogin = async (role) => {
     else if (role === 'admin') router.push('/admin/dashboard');
   } catch (err) {
     notifStore.showToast("Login Failed", err.message, "danger");
-  }
+  } 
 };
 
 const handleLogout = () => {
