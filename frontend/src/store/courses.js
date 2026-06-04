@@ -3,7 +3,7 @@ import { useAuthStore } from './auth';
 
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:8000/api'
-  : 'https://aether-elearning.onrender.com/api';
+  : 'https://aether-elearning-backend.onrender.com/api';
 
 export const useCoursesStore = defineStore('courses', {
   state: () => {
