@@ -26,8 +26,6 @@ lerna-debug.log*
 .eslintcache
 
 # Frontend Environment Variables
-.env
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -64,3 +62,4 @@ aether.db
 # Dynamic User Uploads / Media Assets
 backend/static/uploads/*
 !backend/static/uploads/.gitkeep
+config.bat
